@@ -4,15 +4,27 @@
 #
 
 # Pull base image.
-FROM dockerfile/ubuntu
+# FROM dockerfile/ubuntu
+FROM ubuntu:14.04
 MAINTAINER Ken Mugrage <kmugrage@thoughtworks.com>
 
+# Install.
+RUN \
+  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
+  apt-get update && \
+  apt-get -y upgrade && \
+  apt-get install -y build-essential && \
+  apt-get install -y software-properties-common && \
+  apt-get install -y byobu curl git htop man unzip vim wget && \
+  apt-get install -y ruby1.9.3 && \
+  apt-get install -y default-jre-headless && \
+  rm -rf /var/lib/apt/lists/*
+
 # My agents need Ruby
-RUN apt-get update
-RUN apt-get install -y ruby1.9.3
+# RUN apt-get update
+# RUN apt-get install -y ruby1.9.3
 RUN gem install rake
 
-RUN apt-get update && apt-get install -y default-jre-headless
 
 # Modified to wget the agent from the download site. When a package repo
 # is available we can use that and always get the lastest
